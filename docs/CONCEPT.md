@@ -313,44 +313,11 @@ outputs:
 
 ### **Core Components**
 
-**1. Template Engine**
-- Loads template definitions (YAML/JSON)
-- Validates input requirements
-- Routes to appropriate processing pipeline
-
-**2. Input Processor**
-- File upload handler (drag-drop, CLI, API)
-- Format normalizers (transcript formats, chat export formats)
-- Context assembler (combines all inputs per template requirements)
-
-**3. LLM Orchestrator**
-- **Model-agnostic design:** Supports Claude, GPT-4, Llama, Mistral, etc.
-- **Per-task configuration:** Temperature, seed, max tokens, model selection
-- **Prompt template management:** Structured prompts per deliverable type
-- **Rate limiting & retry logic**
-
-**4. Output Generator**
-- Markdown writer (primary format)
-- Format converters (PDF via Pandoc, HTML, Notion import)
-- Integration adapters (Jira, Slack, Confluence, LMS systems)
-
-**5. Knowledge Graph (Optional)**
-- Cross-session reference system
-- Glossary/terminology database
-- Pattern detection across multiple sessions
-- SQLite or PostgreSQL backend
+TBD
 
 ### **Deployment Options**
 
-**Self-Hosted:**
-- Docker container (single-command setup)
-- Local CLI tool (Python package)
-- Desktop app (Electron wrapper)
-
-**Cloud-Optional:**
-- Webhook triggers (Zoom/Teams integration)
-- Managed hosting for non-technical users
-- API service for enterprise integrations
+TBD
 
 ### **Configuration Flexibility**
 
