@@ -110,9 +110,9 @@ ipython_config.py
 # -----------------------------------------------------------------------------
 # Project Specific
 # -----------------------------------------------------------------------------
-# Output directories
-output/
-data/output/
+# Output directories (root level only, not src/rewindlearn/output/)
+/output/
+/data/output/
 clips/
 study-guides/
 
