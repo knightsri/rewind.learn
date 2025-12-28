@@ -55,6 +55,8 @@ graph TB
         M --> N2[PDF Converter]
         M --> N3[HTML Renderer]
         M --> N4[JSON Export]
+        M --> N5[CSV Export<br/>Concept Chunks]
+        N5 --> N6[Video Chunker<br/>Optional]
     end
     
     subgraph "Observability LangSmith"
@@ -64,7 +66,8 @@ graph TB
         O -.-> R[Quality Metrics]
     end
     
-    N1 & N2 & N3 & N4 --> S[Deliverables]
+    N1 & N2 & N3 & N4 & N5 --> S[Deliverables]
+    N6 --> S2[Video Clips]
     
     style F fill:#e1f5ff
     style O fill:#fff4e1
@@ -435,6 +438,13 @@ rewindlearn config set-provider openai --api-key $OPENAI_API_KEY
 
 # View processing history and costs
 rewindlearn history --last 10 --show-costs
+
+# Split video into concept chunks
+rewindlearn video split \
+  --input lecture-01.mp4 \
+  --chunks study-guides/concept-chunks.csv \
+  --output clips/
+# Output: clips/01-neural-network-basics.mp4, clips/02-forward-propagation.mp4, ...
 ```
 
 ---
@@ -570,6 +580,8 @@ graph TB
 - **Markdown**: Python-Markdown library
 - **PDF**: WeasyPrint or Pandoc
 - **HTML**: Jinja2 templates
+- **CSV**: Concept chunks index for video segmentation
+- **Video Chunking**: FFmpeg (splits videos using CSV timestamps)
 
 ### CLI & UX
 - **CLI**: Typer (Python)

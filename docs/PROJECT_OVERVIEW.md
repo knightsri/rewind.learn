@@ -180,7 +180,7 @@ Optional:
 - Slide deck (PDF)
 - Video recording (for timestamp indexing)
 
-**Processing Tasks (6 LangChain chains):**
+**Processing Tasks (7 LangChain chains):**
 
 1. **Session Summary** - Executive overview, key concepts, learning objectives
 2. **Concept Timeline** - Chronological outline (5-10 min segments with video timestamps)
@@ -188,16 +188,18 @@ Optional:
 4. **Coverage Gap Report** - Planned topics vs. actual coverage
 5. **Learning Resources** - Curated external resources (papers, videos, tutorials)
 6. **Action Items** - Homework, assignments, deadlines
+7. **Concept Chunks** - CSV index for video segmentation into topic-focused clips
 
 **Output Deliverables:**
 
-All outputs generated in Markdown, convertible to PDF/HTML:
+All outputs generated in Markdown (convertible to PDF/HTML) plus CSV:
 - `session-summary.md`
 - `concept-timeline.md`
 - `student-friction-analysis.md`
 - `coverage-gaps.md`
 - `learning-resources.md`
 - `action-items.md`
+- `concept-chunks.csv` - For video segmentation into topic clips
 
 **Performance Targets:**
 - Processing time: <3 minutes per session

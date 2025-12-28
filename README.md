@@ -40,6 +40,9 @@ Define custom processing workflows for any session type. Templates specify input
 ### 🔒 Privacy-First, Self-Hostable
 Run entirely on your infrastructure. Your data never leaves your environment. Choose your LLM provider (Claude, GPT-4, local models).
 
+### 🎬 Concept Extraction & Video Chunking
+Extract bite-sized concepts with precise timestamps. Generate CSV indexes (`concept, description, start_time, end_time`) to automatically segment long recordings into topic-focused clips for microlearning and easy navigation.
+
 ### 🧠 Cross-Session Intelligence
 Knowledge graphs connect concepts across sessions. Identify prerequisite gaps, recurring confusion, and learning patterns over time.
 
@@ -89,6 +92,13 @@ ls study-guides/
 # coverage-gaps.md
 # learning-resources.md
 # action-items.md
+# concept-chunks.csv        # For video segmentation
+
+# Split video into concept clips (optional)
+rewindlearn video split \
+  --input lecture.mp4 \
+  --chunks study-guides/concept-chunks.csv \
+  --output clips/
 ```
 
 ### Example Output
@@ -107,6 +117,7 @@ From a 2-hour AI Engineering course session:
 - ✅ Coverage gap report (planned vs. actual topics)
 - 🔗 Curated learning resources (papers, videos, tutorials)
 - ✏️ Action items (homework, deadlines, exercises)
+- 🎬 Concept chunks CSV (for video segmentation into topic clips)
 
 **Cost:** ~$1.50 per session  
 **Time saved:** 3-5 hours of manual work
@@ -168,9 +179,11 @@ outputs:
     - session_summary
     - concept_timeline
     - friction_analysis
+    - concept_chunks        # CSV for video segmentation
   formats:
     - markdown
     - pdf
+    - csv                   # For concept_chunks
 ```
 
 **Current Templates:**

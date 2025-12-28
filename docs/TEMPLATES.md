@@ -90,7 +90,7 @@ inputs:
     - q_and_a_export    # Zoom Q&A, Slido, etc.
 ```
 
-### Processing Tasks (6 Chains)
+### Processing Tasks (7 Chains)
 
 **Task 1: Session Summary**
 
@@ -329,6 +329,57 @@ inputs:
   dependencies: []  # Independent, can run parallel
 ```
 
+**Task 7: Concept Chunks (Video Segmentation Index)**
+
+```yaml
+- name: "concept_chunks"
+  prompt_template: |
+    Extract discrete, self-contained concepts from the transcript with precise timestamps.
+
+    TRANSCRIPT (with timestamps):
+    {transcript}
+
+    SESSION SUMMARY (for context):
+    {session_summary}
+
+    REQUIREMENTS:
+    - Each concept should be a complete, teachable unit (3-15 minutes typical)
+    - Concepts should have clear boundaries (topic transitions)
+    - Include precise start and end timestamps in HH:MM:SS format
+    - Description should be 1-2 sentences explaining what is taught
+    - Concepts should be granular enough for standalone viewing
+
+    OUTPUT FORMAT (CSV):
+    concept,description,start_time,end_time
+
+    Example rows:
+    "Introduction to APIs","Overview of what APIs are and why they matter in modern software","00:02:15","00:08:30"
+    "REST Principles","The six architectural constraints that define RESTful systems","00:08:30","00:17:45"
+    "HTTP Methods","GET, POST, PUT, DELETE and when to use each","00:17:45","00:28:10"
+
+    IMPORTANT:
+    - Timestamps must match the transcript exactly
+    - No gaps between concepts (end_time of one = start_time of next)
+    - Combine very short topics (<2 min) with related concepts
+    - Split very long segments (>15 min) into logical sub-concepts
+
+  llm_config:
+    model: "claude-sonnet-4"
+    temperature: 0.2  # Low temperature for precise timestamps
+    max_tokens: 3000
+
+  output_format: csv  # Special handling for CSV output
+
+  dependencies: ["session_summary"]  # Needs summary for context
+```
+
+**Use Cases for Concept Chunks:**
+- **Video Splitting**: Automated segmentation of long recordings into topic clips
+- **Navigation Index**: Students jump directly to specific concepts
+- **Microlearning**: Review individual topics without full video scrubbing
+- **Content Reuse**: Instructors extract and reuse explanations across courses
+- **Accessibility**: Smaller clips are easier to download, share, and consume on mobile
+
 ### Output Specifications
 
 ```yaml
@@ -340,19 +391,23 @@ outputs:
     - coverage_gaps
     - learning_resources
     - action_items
-    
+    - concept_chunks      # CSV for video segmentation
+
   formats:
     - markdown    # Primary format
     - pdf         # Convert via WeasyPrint
     - html        # For web viewing
-    
+    - csv         # For concept_chunks (video index)
+
   languages:
     - en          # English default
     # Future: es, fr, de, etc.
-    
+
   naming_convention:
     pattern: "{course_name}-session-{session_number}-{deliverable}.{format}"
-    example: "AI-Engineering-session-01-summary.md"
+    examples:
+      - "AI-Engineering-session-01-summary.md"
+      - "AI-Engineering-session-01-concept-chunks.csv"
 ```
 
 ---

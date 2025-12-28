@@ -95,12 +95,19 @@ Educational courses, bootcamps, training workshops, certification programs
 - Submission requirements and format
 - Evaluation criteria (if discussed)
 
-**7. Glossary & Terminology Update**
+**7. Concept Chunks Index (CSV)**
+- Bite-sized concept extraction with precise timestamps
+- CSV format: `concept, description, start_time, end_time`
+- Enables automated video segmentation into topic-focused clips
+- Supports microlearning and direct navigation to specific topics
+- Allows instructors to reuse specific explanations across courses
+
+**8. Glossary & Terminology Update**
 - New terms introduced this session
 - Definitions extracted from context
 - Updates master course glossary (cumulative across sessions)
 
-**8. Multi-Language Outputs** (optional)
+**9. Multi-Language Outputs** (optional)
 - All deliverables translated to configured languages
 - Configurable per institution/course
 
@@ -149,10 +156,12 @@ outputs:
     - coverage_gaps
     - learning_paths
     - action_items
+    - concept_chunks      # CSV for video segmentation
     - glossary_update
   conversions:
     - pdf
     - html
+    - csv                 # For concept_chunks
   languages:
     - en  # English default
     # Add more: es, fr, de, etc.
