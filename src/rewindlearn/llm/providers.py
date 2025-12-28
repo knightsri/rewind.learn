@@ -3,6 +3,7 @@
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models import BaseChatModel
 from langchain_openai import ChatOpenAI
+from pydantic import SecretStr
 
 from rewindlearn.core.config import Settings
 from rewindlearn.core.exceptions import LLMError
@@ -61,7 +62,7 @@ class LLMProvider:
         if "/" in model and self.settings.openrouter_api_key:
             return ChatOpenAI(
                 model=model,
-                api_key=self.settings.openrouter_api_key,
+                api_key=SecretStr(self.settings.openrouter_api_key),
                 base_url=OPENROUTER_BASE_URL,
                 max_retries=self.settings.max_retries,
             )
@@ -72,9 +73,9 @@ class LLMProvider:
             anthropic_model = ANTHROPIC_MODEL_MAP.get(
                 base_model, self.settings.anthropic_fallback_model
             )
-            return ChatAnthropic(
-                model=anthropic_model,
-                api_key=self.settings.anthropic_api_key,
+            return ChatAnthropic(  # type: ignore[call-arg]
+                model_name=anthropic_model,
+                api_key=SecretStr(self.settings.anthropic_api_key),
                 max_retries=self.settings.max_retries,
             )
 
@@ -82,7 +83,7 @@ class LLMProvider:
         if base_model.startswith("gpt") and self.settings.openai_api_key:
             return ChatOpenAI(
                 model=base_model,
-                api_key=self.settings.openai_api_key,
+                api_key=SecretStr(self.settings.openai_api_key),
                 max_retries=self.settings.max_retries,
             )
 
@@ -90,7 +91,7 @@ class LLMProvider:
         if self.settings.openai_api_key:
             return ChatOpenAI(
                 model=self.settings.openai_fallback_model,
-                api_key=self.settings.openai_api_key,
+                api_key=SecretStr(self.settings.openai_api_key),
                 max_retries=self.settings.max_retries,
             )
 

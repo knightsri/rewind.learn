@@ -38,13 +38,14 @@ class OutputBuilder:
             )
             path = self.output_dir / filename
 
-            # Write file
+            # Write file (content is str from LLM output)
+            content_str = str(content)
             if ext == "csv":
-                path.write_text(content, encoding="utf-8")
+                path.write_text(content_str, encoding="utf-8")
             else:
                 # Add frontmatter to markdown
                 full_content = self._add_frontmatter(
-                    content, deliverable, course_name, session_number
+                    content_str, deliverable, course_name, session_number
                 )
                 path.write_text(full_content, encoding="utf-8")
 

@@ -1,6 +1,6 @@
 """Pydantic models for template definitions."""
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -48,12 +48,12 @@ class Template(BaseModel):
     version: str = Field(description="Template version")
     description: str | None = None
     inputs: InputSchema
-    processing: dict = Field(description="Contains 'tasks' list")
+    processing: dict[str, Any] = Field(description="Contains 'tasks' list")
     outputs: OutputSchema
 
     @field_validator("processing")
     @classmethod
-    def validate_processing(cls, v: dict) -> dict:
+    def validate_processing(cls, v: dict[str, Any]) -> dict[str, Any]:
         """Ensure processing contains tasks."""
         if "tasks" not in v:
             raise ValueError("processing must contain 'tasks' list")

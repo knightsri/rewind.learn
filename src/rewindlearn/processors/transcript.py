@@ -3,7 +3,7 @@
 import re
 from pathlib import Path
 
-import webvtt
+import webvtt  # type: ignore[import-untyped]
 
 from rewindlearn.processors.base import BaseProcessor, ProcessedContent
 

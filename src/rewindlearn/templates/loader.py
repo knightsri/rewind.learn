@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 from rewindlearn.core.exceptions import TemplateError
 from rewindlearn.templates.models import Template

@@ -7,7 +7,7 @@ from langgraph.graph import END, StateGraph
 
 from rewindlearn.chains import create_chain
 from rewindlearn.llm.router import LLMRouter
-from rewindlearn.templates.models import Template
+from rewindlearn.templates.models import TaskDefinition, Template
 from rewindlearn.workflow.state import SessionState
 
 
@@ -18,9 +18,9 @@ class WorkflowBuilder:
         self.template = template
         self.router = router
 
-    def build(self) -> StateGraph:
+    def build(self) -> Any:
         """Build and compile the workflow graph."""
-        graph = StateGraph(SessionState)
+        graph: StateGraph[SessionState] = StateGraph(SessionState)
         tasks = self.template.get_tasks()
         dep_graph = self.template.build_dependency_graph()
 
@@ -46,7 +46,7 @@ class WorkflowBuilder:
 
         return graph.compile()
 
-    def _make_node(self, chain: Any, task_name: str) -> Callable:
+    def _make_node(self, chain: Any, task_name: str) -> Callable[..., Any]:
         """Create a node function for the graph."""
 
         async def node(state: SessionState) -> dict[str, Any]:
@@ -65,7 +65,7 @@ class WorkflowBuilder:
 
     def _find_leaf_tasks(
         self,
-        tasks: list,
+        tasks: list[TaskDefinition],
         dep_graph: dict[str, list[str]]
     ) -> list[str]:
         """Find tasks that no other task depends on."""

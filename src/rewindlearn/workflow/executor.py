@@ -79,11 +79,12 @@ class WorkflowExecutor:
         ) as progress:
             task = progress.add_task("Processing session...", total=None)
 
-            final_state = await graph.ainvoke(initial_state)
+            result = await graph.ainvoke(initial_state)
 
             progress.update(task, description="Complete!")
 
-        return final_state
+        # Cast result to SessionState (ainvoke returns dict matching our TypedDict)
+        return result  # type: ignore[no-any-return]
 
 
 async def process_session(

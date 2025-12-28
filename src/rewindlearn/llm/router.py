@@ -1,7 +1,7 @@
 """LLM routing with fallback support."""
 
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langsmith import traceable
 
 from rewindlearn.core.exceptions import LLMError
@@ -27,7 +27,7 @@ class LLMRouter:
         system_prompt: str | None = None,
     ) -> str:
         """Invoke LLM with the given prompt and config."""
-        messages = []
+        messages: list[BaseMessage] = []
         if system_prompt:
             messages.append(SystemMessage(content=system_prompt))
         messages.append(HumanMessage(content=prompt))
