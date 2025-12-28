@@ -37,6 +37,16 @@ class Settings(BaseSettings):
     temperature_default: float = Field(default=0.3, ge=0.0, le=1.0)
     max_tokens_default: int = Field(default=4000, gt=0)
 
+    # Fallback Models
+    anthropic_fallback_model: str = Field(
+        default="claude-sonnet-4-20250514",
+        description="Anthropic model to use when falling back from OpenRouter"
+    )
+    openai_fallback_model: str = Field(
+        default="gpt-4o",
+        description="OpenAI model to use as last resort fallback"
+    )
+
     # Paths
     templates_dir: Path = Field(default=Path("templates"), description="Templates directory")
     output_dir: Path = Field(default=Path("output"), description="Output directory")

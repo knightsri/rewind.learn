@@ -11,6 +11,7 @@ from rewindlearn.core.exceptions import LLMError
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 # Model name mapping: OpenRouter short name -> Direct API model ID
+# Used when falling back from OpenRouter to direct Anthropic API
 ANTHROPIC_MODEL_MAP = {
     "claude-sonnet-4": "claude-sonnet-4-20250514",
     "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
@@ -30,6 +31,7 @@ class LLMProvider:
     1. OpenRouter (if model contains "/" and openrouter_api_key is set)
     2. Anthropic (if model starts with "claude" and anthropic_api_key is set)
     3. OpenAI (if model starts with "gpt" and openai_api_key is set)
+    4. OpenAI with gpt-4o (last resort fallback if openai_api_key is set)
     """
 
     def __init__(self, settings: Settings):
@@ -65,8 +67,10 @@ class LLMProvider:
 
         # Fallback: Try Anthropic if model is Claude-based
         if base_model.startswith("claude") and self.settings.anthropic_api_key:
-            # Map OpenRouter short name to Anthropic API model ID
-            anthropic_model = ANTHROPIC_MODEL_MAP.get(base_model, base_model)
+            # Map OpenRouter short name to Anthropic API model ID, or use configured fallback
+            anthropic_model = ANTHROPIC_MODEL_MAP.get(
+                base_model, self.settings.anthropic_fallback_model
+            )
             return ChatAnthropic(
                 model=anthropic_model,
                 api_key=self.settings.anthropic_api_key,
@@ -77,6 +81,14 @@ class LLMProvider:
         if base_model.startswith("gpt") and self.settings.openai_api_key:
             return ChatOpenAI(
                 model=base_model,
+                api_key=self.settings.openai_api_key,
+                max_retries=self.settings.max_retries,
+            )
+
+        # Last resort: Use OpenAI with configured fallback model if available
+        if self.settings.openai_api_key:
+            return ChatOpenAI(
+                model=self.settings.openai_fallback_model,
                 api_key=self.settings.openai_api_key,
                 max_retries=self.settings.max_retries,
             )
