@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = Field(default=None, description="OpenAI API key")
     default_provider: str = Field(default="openrouter", description="Default LLM provider")
     default_model: str = Field(
-        default="anthropic/claude-sonnet-4-20250514",
+        default="anthropic/claude-sonnet-4",
         description="Default model to use (OpenRouter format: provider/model)"
     )
 

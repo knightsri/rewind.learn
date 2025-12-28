@@ -11,7 +11,7 @@ def test_settings_defaults():
     """Test that settings have sensible defaults."""
     settings = Settings()
     assert settings.default_provider == "openrouter"
-    assert settings.default_model == "anthropic/claude-sonnet-4-20250514"
+    assert settings.default_model == "anthropic/claude-sonnet-4"
     assert settings.max_retries == 3
     assert settings.temperature_default == 0.3
 

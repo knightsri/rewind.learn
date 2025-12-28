@@ -26,7 +26,7 @@ class WorkflowExecutor:
         console: Optional[Console] = None
     ):
         self.settings = settings or get_settings()
-        self.console = console or Console()
+        self.console = console or Console(force_terminal=True, legacy_windows=False)
 
         # Load template
         loader = TemplateLoader(self.settings.templates_dir)
@@ -75,7 +75,7 @@ class WorkflowExecutor:
         graph = builder.build()
 
         with Progress(
-            SpinnerColumn(),
+            SpinnerColumn(spinner_name="line"),
             TextColumn("[progress.description]{task.description}"),
             console=self.console,
         ) as progress:
