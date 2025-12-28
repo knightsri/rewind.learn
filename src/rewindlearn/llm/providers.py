@@ -10,6 +10,18 @@ from rewindlearn.core.exceptions import LLMError
 # OpenRouter API base URL
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
+# Model name mapping: OpenRouter short name -> Direct API model ID
+ANTHROPIC_MODEL_MAP = {
+    "claude-sonnet-4": "claude-sonnet-4-20250514",
+    "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
+    "claude-opus-4": "claude-opus-4-20250514",
+    "claude-haiku-4.5": "claude-haiku-4-5-20250929",
+    "claude-3-5-sonnet": "claude-3-5-sonnet-20241022",
+    "claude-3-opus": "claude-3-opus-20240229",
+    "claude-3-sonnet": "claude-3-sonnet-20240229",
+    "claude-3-haiku": "claude-3-haiku-20240307",
+}
+
 
 class LLMProvider:
     """Factory for LLM clients.
@@ -37,8 +49,12 @@ class LLMProvider:
         """Create a new LLM client.
 
         Supports OpenRouter (provider/model format), Anthropic, and OpenAI.
+        Fallback chain: OpenRouter -> Anthropic -> OpenAI
         """
-        # OpenRouter format: provider/model (e.g., "anthropic/claude-sonnet-4-20250514")
+        # Extract base model name for fallback (e.g., "anthropic/claude-sonnet-4" -> "claude-sonnet-4")
+        base_model = model.split("/")[-1] if "/" in model else model
+
+        # OpenRouter format: provider/model (e.g., "anthropic/claude-sonnet-4")
         if "/" in model and self.settings.openrouter_api_key:
             return ChatOpenAI(
                 model=model,
@@ -46,32 +62,47 @@ class LLMProvider:
                 base_url=OPENROUTER_BASE_URL,
                 max_retries=self.settings.max_retries,
             )
-        # Direct Anthropic access
-        elif model.startswith("claude") and self.settings.anthropic_api_key:
+
+        # Fallback: Try Anthropic if model is Claude-based
+        if base_model.startswith("claude") and self.settings.anthropic_api_key:
+            # Map OpenRouter short name to Anthropic API model ID
+            anthropic_model = ANTHROPIC_MODEL_MAP.get(base_model, base_model)
             return ChatAnthropic(
-                model=model,
+                model=anthropic_model,
                 api_key=self.settings.anthropic_api_key,
                 max_retries=self.settings.max_retries,
             )
-        # Direct OpenAI access
-        elif model.startswith("gpt") and self.settings.openai_api_key:
+
+        # Fallback: Try OpenAI if model is GPT-based
+        if base_model.startswith("gpt") and self.settings.openai_api_key:
             return ChatOpenAI(
-                model=model,
+                model=base_model,
                 api_key=self.settings.openai_api_key,
                 max_retries=self.settings.max_retries,
             )
-        # Fallback error handling
-        elif "/" in model:
+
+        # Error handling with helpful messages
+        if "/" in model and not self.settings.openrouter_api_key:
+            if base_model.startswith("claude") and not self.settings.anthropic_api_key:
+                raise LLMError(
+                    f"No API key configured for model: {model}. "
+                    "Set REWINDLEARN_OPENROUTER_API_KEY or REWINDLEARN_ANTHROPIC_API_KEY"
+                )
+            elif base_model.startswith("gpt") and not self.settings.openai_api_key:
+                raise LLMError(
+                    f"No API key configured for model: {model}. "
+                    "Set REWINDLEARN_OPENROUTER_API_KEY or REWINDLEARN_OPENAI_API_KEY"
+                )
             raise LLMError(
                 f"OpenRouter API key not configured for model: {model}. "
                 "Set REWINDLEARN_OPENROUTER_API_KEY"
             )
-        elif model.startswith("claude"):
+        elif base_model.startswith("claude"):
             raise LLMError(
                 f"Anthropic API key not configured for model: {model}. "
                 "Set REWINDLEARN_ANTHROPIC_API_KEY"
             )
-        elif model.startswith("gpt"):
+        elif base_model.startswith("gpt"):
             raise LLMError(
                 f"OpenAI API key not configured for model: {model}. "
                 "Set REWINDLEARN_OPENAI_API_KEY"
