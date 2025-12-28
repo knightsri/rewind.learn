@@ -107,30 +107,27 @@ Create a `.env` file or set environment variables:
 
 ```bash
 # =============================================================================
+# Rewind.Learn Configuration
+# Copy this file to .env and fill in your values
+# =============================================================================
+
 # LLM Provider API Keys (at least one required)
 # Fallback chain: OpenRouter -> Anthropic -> OpenAI
-# =============================================================================
 REWINDLEARN_OPENROUTER_API_KEY=sk-or-...   # Recommended - access any model
 REWINDLEARN_ANTHROPIC_API_KEY=sk-ant-...   # Direct Anthropic access
 REWINDLEARN_OPENAI_API_KEY=sk-...          # Direct OpenAI access
 
-# =============================================================================
-# LangSmith Observability (optional)
-# =============================================================================
+# LangSmith Observability (optional but recommended)
 REWINDLEARN_LANGSMITH_API_KEY=lsv2_...
 REWINDLEARN_LANGSMITH_TRACING=true
 
-# =============================================================================
 # Rewind.Learn Settings
-# =============================================================================
 REWINDLEARN_DEFAULT_PROVIDER=openrouter
 REWINDLEARN_DEFAULT_MODEL=anthropic/claude-sonnet-4
 REWINDLEARN_TEMPLATES_DIR=./templates
 REWINDLEARN_OUTPUT_DIR=./output
 
-# =============================================================================
 # Fallback Models (used when primary provider is unavailable)
-# =============================================================================
 REWINDLEARN_ANTHROPIC_FALLBACK_MODEL=claude-sonnet-4-20250514
 REWINDLEARN_OPENAI_FALLBACK_MODEL=gpt-4o
 ```
