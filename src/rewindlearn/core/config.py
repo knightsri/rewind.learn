@@ -18,12 +18,13 @@ class Settings(BaseSettings):
     )
 
     # LLM Providers
+    openrouter_api_key: Optional[str] = Field(default=None, description="OpenRouter API key")
     anthropic_api_key: Optional[str] = Field(default=None, description="Anthropic API key")
     openai_api_key: Optional[str] = Field(default=None, description="OpenAI API key")
-    default_provider: str = Field(default="anthropic", description="Default LLM provider")
+    default_provider: str = Field(default="openrouter", description="Default LLM provider")
     default_model: str = Field(
-        default="claude-sonnet-4-20250514",
-        description="Default model to use"
+        default="anthropic/claude-sonnet-4-20250514",
+        description="Default model to use (OpenRouter format: provider/model)"
     )
 
     # LangSmith Observability
@@ -42,7 +43,9 @@ class Settings(BaseSettings):
 
     def get_api_key(self, provider: str) -> Optional[str]:
         """Get API key for the specified provider."""
-        if provider == "anthropic":
+        if provider == "openrouter":
+            return self.openrouter_api_key
+        elif provider == "anthropic":
             return self.anthropic_api_key
         elif provider == "openai":
             return self.openai_api_key
@@ -50,10 +53,11 @@ class Settings(BaseSettings):
 
     def validate_api_keys(self) -> None:
         """Raise error if no API keys are configured."""
-        if not self.anthropic_api_key and not self.openai_api_key:
+        if not self.openrouter_api_key and not self.anthropic_api_key and not self.openai_api_key:
             raise ValueError(
                 "No LLM API keys configured. "
-                "Set REWINDLEARN_ANTHROPIC_API_KEY or REWINDLEARN_OPENAI_API_KEY"
+                "Set REWINDLEARN_OPENROUTER_API_KEY, REWINDLEARN_ANTHROPIC_API_KEY, "
+                "or REWINDLEARN_OPENAI_API_KEY"
             )
 
 

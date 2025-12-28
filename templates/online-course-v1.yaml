@@ -38,7 +38,7 @@ processing:
 
         Use markdown formatting. Be concise but comprehensive.
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.3
         max_tokens: 2500
       dependencies: []
@@ -63,7 +63,7 @@ processing:
 
         Include ALL substantive teaching moments. Skip breaks and off-topic chat.
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.2
         max_tokens: 2500
       dependencies: []
@@ -92,7 +92,7 @@ processing:
         01_HTTP_Request_Basics,Learn how to construct HTTP requests with headers,00:05:30,00:10:45
         02_API_Authentication,Understand OAuth2 flow and token management,00:10:45,00:17:20
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.1
         max_tokens: 2000
       dependencies: []
@@ -132,7 +132,7 @@ processing:
         - Specific improvements for next session
         - Additional examples that would help
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.4
         max_tokens: 2000
       dependencies:
@@ -168,7 +168,7 @@ processing:
         - Natural next steps for learning
         - Topics for future sessions
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.4
         max_tokens: 1500
       dependencies:
@@ -213,7 +213,7 @@ processing:
 
         Format with clear categories and working URLs where possible.
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.5
         max_tokens: 2000
       dependencies:
@@ -254,7 +254,7 @@ processing:
 
         Include time estimates where helpful.
       llm_config:
-        model: claude-sonnet-4-20250514
+        model: anthropic/claude-sonnet-4-20250514
         temperature: 0.3
         max_tokens: 1500
       dependencies:
