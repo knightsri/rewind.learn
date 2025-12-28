@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Work/Personal/Rewind.Learn\" stash pop)",
+      "Bash(git -C \"C:/Work/Personal/Rewind.Learn\" stash drop)",
+      "Bash(git -C \"C:/Work/Personal/Rewind.Learn\" add README.md docs/ARCHITECTURE.md docs/CONCEPT.md docs/PROJECT_OVERVIEW.md docs/TEMPLATES.md implementation-plan.md)",
+      "Bash(git -C \"C:/Work/Personal/Rewind.Learn\" commit -m \"$\\(cat <<''EOF''\nAdd concept chunking feature and comprehensive implementation plan\n\n- Add concept extraction & video chunking feature across all docs\n- Add Task 7: Concept Chunks \\(CSV\\) for video segmentation\n- Add `rewindlearn video split` CLI command\n- Create implementation-plan.md with 12 phases:\n  - Python package structure with PyPI distribution\n  - Template engine, file processors, LangChain chains\n  - LangGraph workflow, output generation, CLI\n  - Docker containerization \\(optional\\)\n  - Testing and documentation\nEOF\n\\)\")",
+      "Bash(git -C \"C:/Work/Personal/Rewind.Learn\" push)"
+    ]
+  }
+}
