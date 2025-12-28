@@ -1,0 +1,7 @@
+00:05:30 From John Smith to Everyone: Can you explain what dynamic typing means?
+00:06:15 From Instructor to Everyone: Great question! Dynamic typing means Python determines the variable type at runtime.
+00:10:45 From Jane Doe to Everyone: How do I check the type of a variable?
+00:11:00 From Instructor to Everyone: You can use the type() function. For example: type(x)
+00:15:30 From Bob Johnson to Everyone: Is Python faster than Java because of dynamic typing?
+00:16:00 From Instructor to Everyone: Actually, dynamic typing makes Python slower. But it's easier to write.
+00:25:00 From John Smith to Everyone: Thanks for the explanation!

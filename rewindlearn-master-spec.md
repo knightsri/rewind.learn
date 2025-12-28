@@ -10,8 +10,7 @@
 **Name:** Rewind.Learn  
 **Goal:** A Python library that transforms session artifacts (transcripts, chat logs) into structured learning materials.
 
-**Primary Deliverable:** `pip install rewindlearn` - a PyPI-published package  
-**Secondary Deliverable:** Docker container for containerized deployments
+**Primary Deliverable:** `pip install rewindlearn` - a PyPI-published package
 
 **What It Does:**
 ```
@@ -33,12 +32,12 @@ Output: Study guide, concept timeline, friction analysis,
 │                           Rewind.Learn Architecture                         │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                     │
-│  │   CLI       │    │  Python API │    │   Docker    │                     │
-│  │  (Typer)    │    │  (Import)   │    │  Container  │                     │
-│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘                     │
-│         │                  │                  │                             │
-│         └──────────────────┼──────────────────┘                             │
+│  ┌─────────────────────────┐    ┌─────────────────────────┐               │
+│  │          CLI            │    │       Python API        │               │
+│  │        (Typer)          │    │        (Import)         │               │
+│  └───────────┬─────────────┘    └───────────┬─────────────┘               │
+│              │                              │                              │
+│              └──────────────┬───────────────┘                              │
 │                            ▼                                                │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
 │  │                        TEMPLATE ENGINE                               │   │
@@ -185,14 +184,7 @@ rewind.learn/
 │       ├── test.yml                 # CI on PR
 │       └── publish.yml              # PyPI on release
 │
-├── scripts/
-│   ├── docker-run.sh               # Docker helper
-│   └── docker-process.sh           # Quick process script
-│
 ├── pyproject.toml                   # Package metadata
-├── Dockerfile                       # Production container
-├── Dockerfile.dev                   # Development container
-├── docker-compose.yaml              # Container orchestration
 ├── .env.example                     # Environment template
 ├── .gitignore
 ├── README.md
@@ -204,9 +196,9 @@ rewind.learn/
 
 ## 🚀 Implementation Phases
 
-### Phase 1: Project Foundation & Docker
+### Phase 1: Project Foundation
 
-**Goal:** Scaffolding that allows `pip install -e .` and `docker compose build` immediately.
+**Goal:** Scaffolding that allows `pip install -e .` immediately.
 
 #### 1.1 Create pyproject.toml
 
@@ -375,162 +367,7 @@ if __name__ == "__main__":
 # PEP 561 marker file - indicates this package supports type hints
 ```
 
-#### 1.3 Docker Configuration
-
-**File: `Dockerfile`**
-
-```dockerfile
-# =============================================================================
-# Rewind.Learn Production Dockerfile
-# Multi-stage build for minimal image size
-# =============================================================================
-
-# Build stage
-FROM python:3.11-slim as builder
-
-WORKDIR /build
-
-# Install build dependencies
-RUN pip install --no-cache-dir build
-
-# Copy source files needed for build
-COPY pyproject.toml README.md LICENSE ./
-COPY src/ src/
-COPY templates/ templates/
-
-# Build wheel
-RUN python -m build --wheel
-
-# =============================================================================
-# Runtime stage
-# =============================================================================
-FROM python:3.11-slim
-
-LABEL maintainer="Sri Bolisetty"
-LABEL description="Rewind.Learn - Transform session artifacts into structured knowledge"
-LABEL version="0.1.0"
-
-WORKDIR /app
-
-# Install the wheel from build stage
-COPY --from=builder /build/dist/*.whl /tmp/
-RUN pip install --no-cache-dir /tmp/*.whl && rm /tmp/*.whl
-
-# Copy built-in templates
-COPY templates/ /app/templates/
-
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash rewindlearn && \
-    mkdir -p /data/input /data/output && \
-    chown -R rewindlearn:rewindlearn /data
-
-USER rewindlearn
-
-# Environment defaults
-ENV REWINDLEARN_TEMPLATES_DIR=/app/templates
-ENV REWINDLEARN_OUTPUT_DIR=/data/output
-
-# Working directory for data
-WORKDIR /data
-
-ENTRYPOINT ["rewindlearn"]
-CMD ["--help"]
-```
-
-**File: `Dockerfile.dev`**
-
-```dockerfile
-# =============================================================================
-# Rewind.Learn Development Dockerfile
-# Includes dev dependencies and source mounting
-# =============================================================================
-
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy project files
-COPY pyproject.toml README.md LICENSE ./
-
-# Install package in editable mode with dev dependencies
-RUN pip install --no-cache-dir -e ".[dev]"
-
-# Copy source (will be overwritten by volume mount in dev)
-COPY . .
-
-# Create data directories
-RUN mkdir -p /data/input /data/output
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-CMD ["bash"]
-```
-
-**File: `docker-compose.yaml`**
-
-```yaml
-version: "3.9"
-
-services:
-  # Production container
-  rewindlearn:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: rewindlearn:latest
-    container_name: rewindlearn
-    environment:
-      - REWINDLEARN_ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - REWINDLEARN_OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - REWINDLEARN_LANGSMITH_API_KEY=${LANGSMITH_API_KEY:-}
-      - REWINDLEARN_LANGSMITH_TRACING=${LANGSMITH_TRACING:-false}
-    volumes:
-      - ./data/input:/data/input:ro
-      - ./data/output:/data/output
-      - ./templates:/app/templates:ro
-    working_dir: /data
-
-  # Development container with source mounted
-  dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    image: rewindlearn:dev
-    container_name: rewindlearn-dev
-    environment:
-      - REWINDLEARN_ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - REWINDLEARN_OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - REWINDLEARN_LANGSMITH_API_KEY=${LANGSMITH_API_KEY:-}
-      - REWINDLEARN_LANGSMITH_TRACING=${LANGSMITH_TRACING:-true}
-    volumes:
-      - .:/app
-      - ./data:/data
-    working_dir: /app
-    command: bash
-    stdin_open: true
-    tty: true
-
-  # Test runner
-  test:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    image: rewindlearn:dev
-    environment:
-      - PYTHONPATH=/app/src
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: pytest -v --cov=src/rewindlearn --cov-report=term-missing
-```
-
-#### 1.4 Environment Template
+#### 1.3 Environment Template
 
 **File: `.env.example`**
 
@@ -555,7 +392,7 @@ REWINDLEARN_TEMPLATES_DIR=./templates
 REWINDLEARN_OUTPUT_DIR=./output
 ```
 
-#### 1.5 Core Files
+#### 1.4 Core Files
 
 **File: `README.md`**
 
@@ -588,17 +425,6 @@ rewindlearn process \
     --course "AI Engineering" \
     --session 5 \
     --output study-guides/
-```
-
-## Docker
-
-```bash
-docker run -v $(pwd)/data:/data \
-    -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
-    rewindlearn process \
-    --template online-course \
-    --transcript /data/lecture.vtt \
-    --output /data/output
 ```
 
 ## Python API
@@ -701,16 +527,12 @@ Thumbs.db
 [ ] Create src/rewindlearn/__init__.py
 [ ] Create src/rewindlearn/__main__.py
 [ ] Create src/rewindlearn/py.typed
-[ ] Create Dockerfile (production)
-[ ] Create Dockerfile.dev (development)
-[ ] Create docker-compose.yaml
 [ ] Create .env.example
 [ ] Create README.md
 [ ] Create LICENSE (Apache 2.0)
 [ ] Create .gitignore
 [ ] Create empty __init__.py in all package directories
 [ ] Verify: pip install -e . works
-[ ] Verify: docker compose build works
 [ ] Verify: rewindlearn --help shows usage (will fail until CLI implemented)
 ```
 
@@ -3298,11 +3120,6 @@ Core Functionality:
 [ ] rewindlearn config show displays configuration
 [ ] Programmatic API works: from rewindlearn import process_session
 
-Docker:
-[ ] docker compose build succeeds
-[ ] docker compose run rewindlearn --help works
-[ ] Container can process files from mounted volumes
-
 Quality:
 [ ] All tests pass: pytest
 [ ] Type checks pass: mypy src/
@@ -3329,12 +3146,6 @@ rewindlearn process run \
     --course "AI Engineering" \
     --session 5 \
     --output study-guides/
-
-# Or use Docker
-docker compose run rewindlearn process run \
-    --template online-course \
-    --transcript /data/input/lecture.vtt \
-    --output /data/output
 ```
 
 ---
@@ -3344,6 +3155,5 @@ docker compose run rewindlearn process run \
 1. **Build incrementally** - Complete each phase before moving to the next
 2. **Test as you go** - Don't wait until the end to test
 3. **Use the checklist** - Check off tasks as you complete them
-4. **Docker early** - Verify Docker builds work after Phase 1
-5. **Real data** - Test with actual transcript files when available
-6. **Error messages** - Make error messages helpful and actionable
+4. **Real data** - Test with actual transcript files when available
+5. **Error messages** - Make error messages helpful and actionable

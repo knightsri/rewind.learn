@@ -1,0 +1,29 @@
+template_id: test-template
+name: Test Template
+version: "1.0"
+description: A simple test template
+
+inputs:
+  required:
+    - transcript
+  optional: []
+
+processing:
+  tasks:
+    - name: test_task
+      prompt_template: |
+        Summarize this transcript:
+        {transcript}
+      llm_config:
+        model: claude-sonnet-4-20250514
+        temperature: 0.3
+        max_tokens: 1000
+      dependencies: []
+      output_format: markdown
+
+outputs:
+  deliverables:
+    - test_task
+  formats:
+    - markdown
+  naming_pattern: "{template_id}-{deliverable}.{format}"

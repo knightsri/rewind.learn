@@ -1,0 +1,25 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+Welcome to the Python basics course.
+
+00:00:05.000 --> 00:00:15.000
+Today we will learn about variables and data types.
+
+00:00:15.000 --> 00:00:30.000
+A variable is a named location in memory that stores a value.
+
+00:00:30.000 --> 00:00:45.000
+In Python, we create variables simply by assigning a value.
+
+00:00:45.000 --> 00:01:00.000
+For example: x = 5 creates an integer variable.
+
+00:01:00.000 --> 00:01:15.000
+And name = "Alice" creates a string variable.
+
+00:01:15.000 --> 00:01:30.000
+Python automatically determines the data type.
+
+00:01:30.000 --> 00:01:45.000
+This is called dynamic typing.

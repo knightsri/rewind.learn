@@ -1,0 +1,17 @@
+template_id: invalid-template
+name: Invalid Template
+version: "1.0"
+
+# Missing required inputs field
+processing:
+  tasks:
+    - name: task_a
+      prompt_template: "Test {transcript}"
+      dependencies:
+        - task_b  # Depends on task that doesn't exist
+
+outputs:
+  deliverables:
+    - task_a
+  formats:
+    - markdown

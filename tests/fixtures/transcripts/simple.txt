@@ -1,0 +1,19 @@
+[00:00:15] Hello everyone, welcome to today's session on Python basics.
+
+[00:01:30] Today we'll be covering variables and data types.
+
+[00:05:45] Let's start with understanding what a variable is. A variable is a named container for storing data values.
+
+[00:10:20] In Python, you don't need to declare the type of a variable. Python figures it out automatically.
+
+[00:15:00] Now let's look at the basic data types: integers, floats, strings, and booleans.
+
+[00:20:30] Integers are whole numbers like 1, 2, 100, or -5.
+
+[00:25:15] Floats are decimal numbers like 3.14 or 2.5.
+
+[00:30:00] Strings are sequences of characters, enclosed in quotes like "Hello, World!"
+
+[00:35:45] Booleans are True or False values.
+
+[00:40:00] That's all for today. Next session we'll cover control flow statements.

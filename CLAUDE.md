@@ -30,10 +30,6 @@ ruff check src/
 
 # Build package
 python -m build
-
-# Docker
-docker compose build
-docker compose run rewindlearn --help
 ```
 
 ## Key Files to Create First (Phase 1)
@@ -42,8 +38,6 @@ docker compose run rewindlearn --help
 ├── pyproject.toml          # Package definition
 ├── src/rewindlearn/        # Source code
 ├── templates/              # Built-in YAML templates
-├── Dockerfile              # Production container
-├── docker-compose.yaml     # Container orchestration
 └── .env.example            # Environment template
 ```
 
@@ -52,7 +46,6 @@ docker compose run rewindlearn --help
 - Don't skip phases
 - Don't implement deferred features (video chunker, PDF) in core - put in `/examples`
 - Don't add dependencies not in the spec without asking
-- Don't forget Docker - it's Phase 1, not an afterthought
 
 ## Success Criteria
 
@@ -66,9 +59,6 @@ rewindlearn --help
 
 # CLI processing
 rewindlearn process run --template online-course --transcript lecture.vtt --output ./
-
-# Docker
-docker compose run rewindlearn --help
 
 # Python API
 python -c "from rewindlearn import process_session; print('OK')"
