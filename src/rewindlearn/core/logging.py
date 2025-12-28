@@ -1,7 +1,6 @@
 """Structured logging with Rich."""
 
 import logging
-from typing import Optional
 
 from rich.console import Console
 from rich.logging import RichHandler
@@ -29,6 +28,6 @@ def setup_logging(level: str = "INFO", verbose: bool = False) -> None:
     )
 
 
-def get_logger(name: Optional[str] = None) -> logging.Logger:
+def get_logger(name: str | None = None) -> logging.Logger:
     """Get a logger instance."""
     return logging.getLogger(name or "rewindlearn")

@@ -60,7 +60,7 @@ def run(
         settings.validate_api_keys()
     except ValueError as e:
         console.print(f"[red]Configuration error:[/red] {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     console.print(Panel.fit(
         f"[bold blue]Rewind.Learn[/bold blue]\n"
@@ -75,7 +75,7 @@ def run(
         tmpl = loader.load(template)
     except Exception as e:
         console.print(f"[red]Template error:[/red] {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     # Execute workflow
     try:
@@ -88,7 +88,7 @@ def run(
         ))
     except Exception as e:
         console.print(f"[red]Processing error:[/red] {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     # Generate outputs
     builder = OutputBuilder(tmpl, output)

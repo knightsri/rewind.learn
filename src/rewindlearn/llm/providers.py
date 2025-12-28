@@ -53,7 +53,8 @@ class LLMProvider:
         Supports OpenRouter (provider/model format), Anthropic, and OpenAI.
         Fallback chain: OpenRouter -> Anthropic -> OpenAI
         """
-        # Extract base model name for fallback (e.g., "anthropic/claude-sonnet-4" -> "claude-sonnet-4")
+        # Extract base model name for fallback
+        # e.g., "anthropic/claude-sonnet-4" -> "claude-sonnet-4"
         base_model = model.split("/")[-1] if "/" in model else model
 
         # OpenRouter format: provider/model (e.g., "anthropic/claude-sonnet-4")

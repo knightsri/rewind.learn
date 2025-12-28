@@ -1,6 +1,7 @@
 """LangGraph workflow construction."""
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from langgraph.graph import END, StateGraph
 

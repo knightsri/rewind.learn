@@ -86,7 +86,10 @@ class ChatProcessor(BaseProcessor):
         messages = []
 
         # Zoom format pattern
-        pattern = r'(\d{2}:\d{2}:\d{2})\s+From\s+(.+?)\s+to\s+(.+?):\s*(.+?)(?=\d{2}:\d{2}:\d{2}\s+From|$)'
+        pattern = (
+            r'(\d{2}:\d{2}:\d{2})\s+From\s+(.+?)\s+to\s+(.+?):\s*'
+            r'(.+?)(?=\d{2}:\d{2}:\d{2}\s+From|$)'
+        )
         matches = re.findall(pattern, text, re.DOTALL)
 
         for timestamp, sender, recipient, content in matches:

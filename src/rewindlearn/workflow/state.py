@@ -1,7 +1,7 @@
 """LangGraph state definitions."""
 
-from typing import Annotated, Optional
 from operator import add
+from typing import Annotated
 
 from typing_extensions import TypedDict
 
@@ -12,18 +12,18 @@ class SessionState(TypedDict):
     # Inputs
     transcript: str
     chat_log: str
-    slides: Optional[str]
+    slides: str | None
     course_name: str
     session_number: int
 
     # Task outputs (populated as chains complete)
-    session_summary: Optional[str]
-    concept_timeline: Optional[str]
-    friction_analysis: Optional[str]
-    coverage_gaps: Optional[str]
-    learning_resources: Optional[str]
-    action_items: Optional[str]
-    concept_chunks: Optional[str]
+    session_summary: str | None
+    concept_timeline: str | None
+    friction_analysis: str | None
+    coverage_gaps: str | None
+    learning_resources: str | None
+    action_items: str | None
+    concept_chunks: str | None
 
     # Metadata
     completed_tasks: Annotated[list[str], add]

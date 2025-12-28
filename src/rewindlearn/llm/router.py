@@ -1,6 +1,5 @@
 """LLM routing with fallback support."""
 
-from typing import Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langsmith import traceable
@@ -25,7 +24,7 @@ class LLMRouter:
         prompt: str,
         config: LLMConfig,
         task_name: str = "unknown",
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
     ) -> str:
         """Invoke LLM with the given prompt and config."""
         messages = []
@@ -60,6 +59,6 @@ class LLMRouter:
                     raise LLMError(
                         f"Both primary ({config.model}) and fallback ({config.fallback_model}) "
                         f"failed for {task_name}: {fallback_error}"
-                    )
+                    ) from None
 
-            raise LLMError(f"LLM invocation failed for {task_name}: {e}")
+            raise LLMError(f"LLM invocation failed for {task_name}: {e}") from None

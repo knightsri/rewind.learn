@@ -1,6 +1,6 @@
 """Pydantic models for template definitions."""
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -11,7 +11,7 @@ class LLMConfig(BaseModel):
     model: str = "claude-sonnet-4-20250514"
     temperature: float = Field(default=0.3, ge=0.0, le=1.0)
     max_tokens: int = Field(default=4000, gt=0)
-    fallback_model: Optional[str] = None
+    fallback_model: str | None = None
 
 
 class TaskDefinition(BaseModel):
@@ -46,7 +46,7 @@ class Template(BaseModel):
     template_id: str = Field(description="Unique template identifier")
     name: str = Field(description="Human-readable name")
     version: str = Field(description="Template version")
-    description: Optional[str] = None
+    description: str | None = None
     inputs: InputSchema
     processing: dict = Field(description="Contains 'tasks' list")
     outputs: OutputSchema
@@ -105,8 +105,4 @@ class Template(BaseModel):
             rec_stack.remove(node)
             return False
 
-        for node in graph:
-            if node not in visited:
-                if dfs(node):
-                    return True
-        return False
+        return any(node not in visited and dfs(node) for node in graph)

@@ -1,11 +1,10 @@
 """File processors for session artifacts."""
 
 from pathlib import Path
-from typing import Optional
 
 from rewindlearn.processors.base import BaseProcessor, ProcessedContent
-from rewindlearn.processors.transcript import TranscriptProcessor
 from rewindlearn.processors.chat import ChatProcessor
+from rewindlearn.processors.transcript import TranscriptProcessor
 
 # Processor registry
 PROCESSORS: dict[str, BaseProcessor] = {
@@ -22,7 +21,7 @@ def process_input(input_type: str, path: Path) -> ProcessedContent:
     return processor.process(path)
 
 
-def get_processor_for_file(path: Path) -> Optional[BaseProcessor]:
+def get_processor_for_file(path: Path) -> BaseProcessor | None:
     """Get the appropriate processor for a file based on extension."""
     for processor in PROCESSORS.values():
         if processor.can_handle(path):

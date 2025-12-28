@@ -44,7 +44,7 @@ class TranscriptProcessor(BaseProcessor):
         try:
             captions = webvtt.read(str(path))
         except Exception as e:
-            raise ValueError(f"Error parsing VTT/SRT file: {e}")
+            raise ValueError(f"Error parsing VTT/SRT file: {e}") from None
 
         timestamps = []
         full_text_parts = []
@@ -95,4 +95,7 @@ class TranscriptProcessor(BaseProcessor):
         parts = timestamp.split(":")
         h, m, s = int(parts[0]), int(parts[1]), int(parts[2])
         total_seconds = h * 3600 + m * 60 + s + seconds
-        return f"{total_seconds // 3600:02d}:{(total_seconds % 3600) // 60:02d}:{total_seconds % 60:02d}"
+        hrs = total_seconds // 3600
+        mins = (total_seconds % 3600) // 60
+        secs = total_seconds % 60
+        return f"{hrs:02d}:{mins:02d}:{secs:02d}"

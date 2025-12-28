@@ -1,7 +1,6 @@
 """Application configuration using Pydantic Settings."""
 
 from pathlib import Path
-from typing import Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -18,9 +17,9 @@ class Settings(BaseSettings):
     )
 
     # LLM Providers
-    openrouter_api_key: Optional[str] = Field(default=None, description="OpenRouter API key")
-    anthropic_api_key: Optional[str] = Field(default=None, description="Anthropic API key")
-    openai_api_key: Optional[str] = Field(default=None, description="OpenAI API key")
+    openrouter_api_key: str | None = Field(default=None, description="OpenRouter API key")
+    anthropic_api_key: str | None = Field(default=None, description="Anthropic API key")
+    openai_api_key: str | None = Field(default=None, description="OpenAI API key")
     default_provider: str = Field(default="openrouter", description="Default LLM provider")
     default_model: str = Field(
         default="anthropic/claude-sonnet-4",
@@ -28,7 +27,7 @@ class Settings(BaseSettings):
     )
 
     # LangSmith Observability
-    langsmith_api_key: Optional[str] = Field(default=None, description="LangSmith API key")
+    langsmith_api_key: str | None = Field(default=None, description="LangSmith API key")
     langsmith_project: str = Field(default="rewindlearn", description="LangSmith project name")
     langsmith_tracing: bool = Field(default=False, description="Enable LangSmith tracing")
 
@@ -51,15 +50,14 @@ class Settings(BaseSettings):
     templates_dir: Path = Field(default=Path("templates"), description="Templates directory")
     output_dir: Path = Field(default=Path("output"), description="Output directory")
 
-    def get_api_key(self, provider: str) -> Optional[str]:
+    def get_api_key(self, provider: str) -> str | None:
         """Get API key for the specified provider."""
-        if provider == "openrouter":
-            return self.openrouter_api_key
-        elif provider == "anthropic":
-            return self.anthropic_api_key
-        elif provider == "openai":
-            return self.openai_api_key
-        return None
+        keys = {
+            "openrouter": self.openrouter_api_key,
+            "anthropic": self.anthropic_api_key,
+            "openai": self.openai_api_key,
+        }
+        return keys.get(provider)
 
     def validate_api_keys(self) -> None:
         """Raise error if no API keys are configured."""
@@ -72,7 +70,7 @@ class Settings(BaseSettings):
 
 
 # Global settings instance (lazy loaded)
-_settings: Optional[Settings] = None
+_settings: Settings | None = None
 
 
 def get_settings() -> Settings:

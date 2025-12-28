@@ -1,13 +1,11 @@
 """Workflow execution engine."""
 
 from pathlib import Path
-from typing import Optional
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from rewindlearn.core.config import Settings, get_settings
-from rewindlearn.core.logging import console
 from rewindlearn.llm.providers import LLMProvider
 from rewindlearn.llm.router import LLMRouter
 from rewindlearn.processors import process_input
@@ -22,8 +20,8 @@ class WorkflowExecutor:
     def __init__(
         self,
         template_id: str,
-        settings: Optional[Settings] = None,
-        console: Optional[Console] = None
+        settings: Settings | None = None,
+        console: Console | None = None
     ):
         self.settings = settings or get_settings()
         self.console = console or Console(force_terminal=True, legacy_windows=False)
@@ -39,8 +37,8 @@ class WorkflowExecutor:
     async def execute(
         self,
         transcript_path: Path,
-        chat_path: Optional[Path] = None,
-        slides_path: Optional[Path] = None,
+        chat_path: Path | None = None,
+        slides_path: Path | None = None,
         course_name: str = "Unknown Course",
         session_number: int = 1,
     ) -> SessionState:
@@ -91,11 +89,11 @@ class WorkflowExecutor:
 async def process_session(
     template: str,
     transcript_path: str | Path,
-    chat_path: Optional[str | Path] = None,
-    slides_path: Optional[str | Path] = None,
+    chat_path: str | Path | None = None,
+    slides_path: str | Path | None = None,
     course_name: str = "Unknown Course",
     session_number: int = 1,
-    settings: Optional[Settings] = None,
+    settings: Settings | None = None,
 ) -> SessionState:
     """
     High-level API to process a session.

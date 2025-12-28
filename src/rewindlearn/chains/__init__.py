@@ -1,17 +1,15 @@
 """Processing chains for session analysis."""
 
+from rewindlearn.chains.actions import ActionsChain
 from rewindlearn.chains.base import BaseChain
+from rewindlearn.chains.chunks import ChunksChain
+from rewindlearn.chains.coverage import CoverageChain
+from rewindlearn.chains.friction import FrictionChain
+from rewindlearn.chains.resources import ResourcesChain
 from rewindlearn.chains.summary import SummaryChain
 from rewindlearn.chains.timeline import TimelineChain
-from rewindlearn.chains.friction import FrictionChain
-from rewindlearn.chains.coverage import CoverageChain
-from rewindlearn.chains.resources import ResourcesChain
-from rewindlearn.chains.actions import ActionsChain
-from rewindlearn.chains.chunks import ChunksChain
-
 from rewindlearn.llm.router import LLMRouter
 from rewindlearn.templates.models import TaskDefinition
-
 
 # Chain registry
 CHAIN_CLASSES: dict[str, type[BaseChain]] = {

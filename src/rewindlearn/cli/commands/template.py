@@ -60,7 +60,7 @@ def show(
         tmpl = loader.load(template_id)
     except Exception as e:
         console.print(f"[red]Error:[/red] {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     console.print(f"[bold]{tmpl.name}[/bold] (v{tmpl.version})")
     console.print(f"ID: {tmpl.template_id}")

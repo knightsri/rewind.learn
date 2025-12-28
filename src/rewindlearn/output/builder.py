@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 from rewindlearn.templates.models import Template
 from rewindlearn.workflow.state import SessionState
@@ -31,10 +30,7 @@ class OutputBuilder:
                 continue
 
             # Determine format
-            if deliverable == "concept_chunks":
-                ext = "csv"
-            else:
-                ext = "md"
+            ext = "csv" if deliverable == "concept_chunks" else "md"
 
             # Generate filename
             filename = self._make_filename(

@@ -1,7 +1,6 @@
 """YAML template loading and validation."""
 
 from pathlib import Path
-from typing import Optional
 
 import yaml
 
@@ -33,9 +32,9 @@ class TemplateLoader:
                 data = yaml.safe_load(f)
             template = Template(**data)
         except yaml.YAMLError as e:
-            raise TemplateError(f"Invalid YAML in template {template_id}: {e}")
+            raise TemplateError(f"Invalid YAML in template {template_id}: {e}") from None
         except Exception as e:
-            raise TemplateError(f"Error loading template {template_id}: {e}")
+            raise TemplateError(f"Error loading template {template_id}: {e}") from None
 
         # Validate dependencies
         errors = template.validate_dependencies()
@@ -46,7 +45,7 @@ class TemplateLoader:
         self._cache[template_id] = template
         return template
 
-    def _find_template(self, template_id: str) -> Optional[Path]:
+    def _find_template(self, template_id: str) -> Path | None:
         """Find template file by ID."""
         # Direct path
         if Path(template_id).exists():
