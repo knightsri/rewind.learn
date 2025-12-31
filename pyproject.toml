@@ -10,7 +10,7 @@ readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 authors = [
-    { name = "Sri Bolisetty", email = "sri@example.com" }
+    { name = "Sri Bolisetty", email = "srinivasb@gmail.com" }
 ]
 keywords = ["langchain", "llm", "education", "transcription", "ai", "learning"]
 classifiers = [
